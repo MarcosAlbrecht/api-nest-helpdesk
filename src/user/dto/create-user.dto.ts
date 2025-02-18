@@ -4,6 +4,7 @@ export class CreateUserDto {
   password: string;
   admin: number;
   assistant: number;
-  rememberToken: string;
   canSeeReports: number;
+  locale: string;
+  token: string;
 }
