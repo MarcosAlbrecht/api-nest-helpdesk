@@ -12,6 +12,7 @@ export class ReturnUserDto {
 
   constructor(user: User & { role?: Role }) {
     this.id = user.id;
+    this.name = user.name;
     this.email = user.email;
     this.admin = user.admin;
     this.assistant = user.assistant;

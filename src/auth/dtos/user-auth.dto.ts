@@ -1,7 +1,6 @@
-import { ReturnRoleDto } from 'src/role/dto/return-role.dto';
-
 export interface UserAuth {
+  id: number;
   userId: number;
   email: string;
-  role: ReturnRoleDto;
+  role: string;
 }

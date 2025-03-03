@@ -1,14 +1,18 @@
+import { Role, User } from '@prisma/client';
 import { Request } from 'express';
 import { sign, verify } from 'jsonwebtoken';
 import { UserAuth } from 'src/auth/dtos/user-auth.dto';
 import { UnauthorizedException } from 'src/exceptions/unauthorized.exceptions';
-import { ReturnUserDto } from 'src/user/dto/return-user.dto';
 
 export const PASSWORD_JWT = 'umasenhamuitograndedepoismudar';
 
-export const generateToken = (user: ReturnUserDto): string => {
+export const generateToken = (user: User & { role?: Role }): string => {
   return sign(
-    { userId: user.id, email: user.email, role: user.role } as UserAuth,
+    {
+      userId: user.id,
+      email: user.email,
+      role: user.role ? user.role.type : null,
+    } as UserAuth,
     PASSWORD_JWT,
     {
       subject: String(user.id),
