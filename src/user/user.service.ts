@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { User } from '@prisma/client';
 
 import { PrismaService } from 'src/database/prisma.service';
+import { CreatePasswordHashed } from 'src/utils/password';
 import { CreateUserDto } from './dto/create-user.dto';
 import { ReturnUserDto } from './dto/return-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -9,7 +10,12 @@ import { UpdateUserDto } from './dto/update-user.dto';
 @Injectable()
 export class UserService {
   constructor(private prisma: PrismaService) {}
-  create(createUserDto: CreateUserDto): Promise<User> {
+
+  async create(createUserDto: CreateUserDto): Promise<User> {
+    const user: CreateUserDto = {
+      ...createUserDto,
+      password: await CreatePasswordHashed(createUserDto.password),
+    };
     return this.prisma.user.create({ data: createUserDto });
   }
 

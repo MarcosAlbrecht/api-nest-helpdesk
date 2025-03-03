@@ -9,6 +9,7 @@ export class ReturnUserDto {
   assistant: number;
   canSeeReports: number;
   role?: ReturnRoleDto;
+
   constructor(user: User & { role?: Role }) {
     this.id = user.id;
     this.email = user.email;
