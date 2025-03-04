@@ -6,8 +6,8 @@ import { AuthDTO } from './dtos/auth.dto';
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
-  @Post()
-  async login(@Body() body: AuthDTO) {
+  @Post('/signin')
+  async signin(@Body() body: AuthDTO) {
     return await this.authService.validateAuth(body);
   }
 }

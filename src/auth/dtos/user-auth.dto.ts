@@ -3,4 +3,5 @@ export interface UserAuth {
   userId: number;
   email: string;
   role: string;
+  admin: number;
 }

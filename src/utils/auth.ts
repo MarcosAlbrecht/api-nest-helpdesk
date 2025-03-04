@@ -1,19 +1,19 @@
 import { Role, User } from '@prisma/client';
 import { Request } from 'express';
 import { sign, verify } from 'jsonwebtoken';
+import { jwtConstants } from 'src/auth/constants';
 import { UserAuth } from 'src/auth/dtos/user-auth.dto';
 import { UnauthorizedException } from 'src/exceptions/unauthorized.exceptions';
-
-export const PASSWORD_JWT = 'umasenhamuitograndedepoismudar';
 
 export const generateToken = (user: User & { role?: Role }): string => {
   return sign(
     {
       userId: user.id,
       email: user.email,
+      admin: user.admin,
       role: user.role ? user.role.type : null,
     } as UserAuth,
-    PASSWORD_JWT,
+    jwtConstants.secret,
     {
       subject: String(user.id),
       expiresIn: '30d',
@@ -30,7 +30,7 @@ export const verifyToken = async (
   const [, token] = authorization.split(' ');
 
   try {
-    const decodedToken = <UserAuth>verify(token, PASSWORD_JWT);
+    const decodedToken = <UserAuth>verify(token, jwtConstants.secret);
 
     return decodedToken;
   } catch (error) {

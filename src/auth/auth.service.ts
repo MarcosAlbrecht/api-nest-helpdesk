@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { User } from '@prisma/client';
 import { PrismaService } from 'src/database/prisma.service';
+import { UserService } from 'src/user/user.service';
 import { generateToken } from 'src/utils/auth';
 import { ValidatePassword } from 'src/utils/password';
 import { AuthDTO } from './dtos/auth.dto';
@@ -8,10 +8,13 @@ import { ReturnUserAuth } from './dtos/return-auth.dto';
 
 @Injectable()
 export class AuthService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    private readonly userService: UserService,
+  ) {}
 
   validateAuth = async (authDTO: AuthDTO): Promise<ReturnUserAuth> => {
-    const user = await this.getUserByEmail(authDTO.email);
+    const user = await this.userService.findUserByEmail(authDTO.email);
 
     const isValidPassword = await ValidatePassword(
       authDTO.password,
@@ -23,22 +26,5 @@ export class AuthService {
     }
 
     return new ReturnUserAuth(generateToken(user));
-  };
-
-  getUserByEmail = async (email: string): Promise<User> => {
-    const user = await this.prisma.user.findFirst({
-      where: {
-        email,
-      },
-      include: {
-        role: true,
-      },
-    });
-
-    if (!user) {
-      throw new NotFoundException('User');
-    }
-
-    return user;
   };
 }

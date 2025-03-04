@@ -1,5 +1,6 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 
+import { User } from '@prisma/client';
 import { PrismaService } from 'src/database/prisma.service';
 import { CreatePasswordHashed } from 'src/utils/password';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -36,6 +37,23 @@ export class UserService {
     // Mapeia os campos para o DTO
     return users.map((user) => new ReturnUserDto(user));
   }
+
+  findUserByEmail = async (email: string): Promise<User> => {
+    const user = await this.prisma.user.findFirst({
+      where: {
+        email,
+      },
+      include: {
+        role: true,
+      },
+    });
+
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+
+    return user;
+  };
 
   findOne(id: number) {
     return `This action returns a #${id} user`;
