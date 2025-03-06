@@ -17,6 +17,6 @@ export class ReturnUserDto {
     this.admin = user.admin;
     this.assistant = user.assistant;
     this.canSeeReports = user.canSeeReports;
-    this.role = user.role ? new ReturnRoleDto(user.role) : undefined;
+    this.role = user.role ? new ReturnRoleDto(user.role) : null;
   }
 }

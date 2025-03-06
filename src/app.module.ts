@@ -28,7 +28,7 @@ export class AppModule implements NestModule {
           method: RequestMethod.POST,
         },
         {
-          path: 'user/create',
+          path: 'user',
           method: RequestMethod.POST,
         },
       )
